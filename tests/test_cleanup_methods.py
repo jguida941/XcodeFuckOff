@@ -1,4 +1,4 @@
-from xcodecleaner.services import cleanup
+from xcodefuckoff.services import cleanup
 
 
 def test_delete_all_runtimes_calls_delete_all_and_specific(make_runner, fixture_text):

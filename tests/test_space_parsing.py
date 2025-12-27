@@ -1,6 +1,6 @@
 import plistlib
 
-from xcodecleaner.services import space
+from xcodefuckoff.services import space
 
 
 def test_df_parse_bytes(fixture_text):

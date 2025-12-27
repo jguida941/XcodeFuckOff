@@ -1,11 +1,33 @@
-# Xcode Disk Ejector
+# XcodeFuckOff
 
-A modern PyQt6 macOS utility to manage Xcode Simulator mounts and reclaim disk space. Features native macOS window chrome, multiple color themes, and a clean futuristic UI.
+Because uninstalling Xcode apparently isn’t enough.
+
+A PyQt6 macOS utility to manage Xcode Simulator mounts and reclaim disk space.  
+Native macOS chrome and a clean, themeable UI.  
+Built out of pure hatred for Xcode.  
+
+## Table of Contents
+
+- [Features](#features)
+- [Requirements](#requirements)
+- [Screenshot](#screenshot)
+- [Why this exists](#why-this-exists)
+- [Important: Eject ≠ Free Space](#important-eject--free-space)
+- [What the app does](#what-the-app-does)
+- [Installation](#installation)
+- [CLI Usage](#cli-usage)
+- [Development](#development)
+- [Themes](#themes)
+- [Xcode Requirement](#xcode-requirement)
+- [Known Limitations](#known-limitations)
+- [Safety Notes](#safety-notes)
+- [Architecture](#architecture)
+- [License](#license)
 
 ## Features
 
 - Native macOS traffic light buttons with full window management
-- 5 color themes: Neon, Cyber Red, Electric Blue, Purple Haze, Matrix
+- 5 color themes: Neon, Cyber Red, Electric Blue, Purple Haze, Forest & Gold
 - Real-time process monitoring for simulator processes
 - Disk space tracking and cleanup utilities
 - Activity logging
@@ -62,7 +84,7 @@ The disk space is still consumed by the backing files until you delete them.
 ### Option A: Launcher (recommended)
 
 ```bash
-python scripts/launch_xcodecleaner.py
+python scripts/launch_xcodefuckoff.py
 ```
 
 Creates a local venv, installs dependencies, and launches the GUI.
@@ -73,17 +95,17 @@ Creates a local venv, installs dependencies, and launches the GUI.
 python -m venv .venv
 source .venv/bin/activate
 pip install -e .
-python -m xcodecleaner
+python -m xcodefuckoff
 ```
 
 ## CLI Usage
 
 ```bash
 # Launch GUI (default)
-python -m xcodecleaner
+python -m xcodefuckoff
 
 # Run full cleanup headless (no GUI)
-python -m xcodecleaner --nuclear
+python -m xcodefuckoff --nuclear
 ```
 
 ## Verify reclaimed space
@@ -103,11 +125,11 @@ pytest -v
 
 Switch themes from the **Menu** button in the app:
 
-- **Neon** - Dark with cyan accent
+- **Neon** - Dark with cyan/teal accent (default)
 - **Cyber Red** - Dark with red/orange gradient
 - **Electric Blue** - Dark with electric blue accent
-- **Purple Haze** - Dark purple with gold buttons
-- **Matrix** - Terminal style with green/amber
+- **Purple Haze** - Dark purple with gold accents
+- **Forest & Gold** - Luxe forest green with gold buttons
 
 ## Xcode Requirement
 
@@ -117,15 +139,69 @@ The app uses `xcrun simctl` commands which require **Xcode** or **Xcode Command 
 
 ## Known Limitations
 
-- **SIP (System Integrity Protection)**: Some system runtime files are protected. The app uses `xcrun simctl runtime delete` which respects SIP.
-- Simulators will be re-created if you open Xcode or run iOS builds.
-- Some mounted disk images may reappear after reboot until backing files are deleted.
+- **SIP (System Integrity Protection)**: SIP does not usually block `/Library/Developer/...` cleanup. Failures are typically permissions/ownership or CoreSimulator locks. `xcrun simctl runtime delete` is the supported removal path.
+- Xcode can recreate default devices and re-download runtimes when you open Xcode or build iOS apps.
+- Unmount-only cleanup is temporary; disk images can reattach until runtimes are unregistered and backing files are deleted.
 
 ## Safety Notes
 
 - Deleting `/Library/Developer/CoreSimulator/...` requires admin and removes installed simulator runtimes.
 - If unsure, run **Free Runtime Space** and answer **No** to the system-runtime prompt for user-space only cleanup.
 - Always verify what you're deleting - the Nuclear Option is aggressive!
+
+## Architecture
+
+### Project Structure
+
+```
+XcodeFuckOff/
+├── assets/                  # App icons and screenshots
+├── docs/
+│   └── adr/                 # Architecture Decision Records
+├── scripts/
+│   └── launch_xcodefuckoff.py  # Auto-venv launcher
+├── tests/
+│   ├── fixtures/            # Test data (diskutil output, etc.)
+│   ├── conftest.py          # Pytest fixtures
+│   └── test_*.py            # Unit tests
+├── xcodefuckoff/
+│   ├── __main__.py          # CLI entry point
+│   ├── core/
+│   │   └── runner.py        # CommandRunner abstraction
+│   ├── services/
+│   │   ├── cleanup.py       # Cleanup orchestration
+│   │   ├── disks.py         # Disk detection/unmounting
+│   │   ├── processes.py     # Process management
+│   │   └── space.py         # APFS space measurement
+│   ├── system/
+│   │   ├── devtools.py      # Xcode/simctl detection
+│   │   └── sip.py           # SIP status checking
+│   └── gui/
+│       ├── app.py           # Application entry point
+│       ├── main_window.py   # Main window (composes mixins)
+│       ├── styles.py        # Theme definitions
+│       ├── threads.py       # Background workers
+│       ├── widgets.py       # Reusable widgets
+│       └── mixins/          # UI functionality by concern
+│           ├── chrome.py    # Native macOS window chrome
+│           ├── tabs.py      # Tab layout
+│           ├── actions.py   # Cleanup actions
+│           ├── monitoring.py # Background scanning
+│           └── logging.py   # Activity log & notifications
+├── pyproject.toml           # Package config & dependencies
+├── requirements.txt         # Runtime dependencies
+└── README.md
+```
+
+### Architecture Decision Records
+
+| ADR | Title | Summary |
+|-----|-------|---------|
+| [0001](docs/adr/0001-command-runner-and-space-accounting.md) | CommandRunner & Space Accounting | Subprocess abstraction for testability; APFS-based space metrics |
+| [0002](docs/adr/0002-gui-mixin-architecture.md) | GUI Mixin Architecture | Main window split into composable mixins |
+| [0003](docs/adr/0003-native-macos-integration.md) | Native macOS Integration | PyObjC for window chrome and menu bar |
+| [0004](docs/adr/0004-devtools-fallback.md) | DevTools Fallback | Manual cleanup when Xcode isn't installed |
+| [0005](docs/adr/0005-theme-system.md) | Theme System | Qt Stylesheets with theme dictionaries |
 
 ## License
 

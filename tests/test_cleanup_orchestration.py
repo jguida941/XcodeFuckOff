@@ -1,4 +1,4 @@
-from xcodecleaner.services import cleanup
+from xcodefuckoff.services import cleanup
 
 
 def test_free_runtime_space_fails_if_simctl_missing(make_runner, fixture_bytes):

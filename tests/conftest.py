@@ -5,7 +5,7 @@ from typing import Iterable, Mapping, Tuple
 
 import pytest
 
-from xcodecleaner.core.runner import CmdResult
+from xcodefuckoff.core.runner import CmdResult
 
 
 FIXTURES_DIR = Path(__file__).parent / "fixtures"

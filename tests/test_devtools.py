@@ -1,6 +1,6 @@
 import os
 
-from xcodecleaner.system import devtools
+from xcodefuckoff.system import devtools
 
 
 def test_get_simctl_env_prefers_developer_dir_env(monkeypatch):

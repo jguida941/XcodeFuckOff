@@ -1,4 +1,4 @@
-from xcodecleaner.services import disks
+from xcodefuckoff.services import disks
 
 
 def test_parses_simulator_disks_from_diskutil_list(fixture_text):

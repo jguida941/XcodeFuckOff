@@ -1,10 +1,11 @@
 # ADR 0001: CommandRunner and APFS Space Accounting
 
-Status: Accepted
-Date: 2025-02-14
+Status: Accepted  
+Date: 2025-12-27  
+Developer: Justin Guida  
 
 ## Context
-XcodeCleaner needs to orchestrate system commands (diskutil, hdiutil, xcrun, rm, launchctl) to unmount simulator disks and reclaim storage. The original implementation issued subprocess calls directly, which caused several problems:
+XcodeFuckOff needs to orchestrate system commands (diskutil, hdiutil, xcrun, rm, launchctl) to unmount simulator disks and reclaim storage. The original implementation issued subprocess calls directly, which caused several problems:
 
 - Unit tests could not reliably simulate system commands.
 - Failures were not consistently surfaced, so the UI could report success when commands failed.

@@ -1,6 +1,6 @@
 import json
 
-from xcodecleaner.services import cleanup
+from xcodefuckoff.services import cleanup
 
 
 def test_delete_runtimes_calls_simctl_runtime_delete(make_runner):

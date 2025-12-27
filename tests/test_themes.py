@@ -9,7 +9,7 @@ Based on best practices from:
 
 import re
 import pytest
-from xcodecleaner.gui import styles
+from xcodefuckoff.gui import styles
 
 
 class TestThemeDefinitions:

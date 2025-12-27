@@ -1,4 +1,4 @@
-from xcodecleaner.services import processes
+from xcodefuckoff.services import processes
 
 
 def test_parse_ps_aux_filters_simulator_processes():

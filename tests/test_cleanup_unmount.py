@@ -1,4 +1,4 @@
-from xcodecleaner.services import cleanup
+from xcodefuckoff.services import cleanup
 
 
 def test_unmount_disk_fallback_success_marks_ok(make_runner):

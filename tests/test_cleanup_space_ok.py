@@ -1,6 +1,6 @@
 import pytest
 
-from xcodecleaner.services import cleanup
+from xcodefuckoff.services import cleanup
 
 
 @pytest.mark.parametrize(

@@ -1,4 +1,0 @@
-   Device Identifier:        disk11s1
-   Volume Name:              tvOS 18.0 Simulator
-   Mount Point:              /Library/Developer/CoreSimulator/Volumes/tvOS_18.0
-   Disk Size:                20.0 GB (20000000000 Bytes)

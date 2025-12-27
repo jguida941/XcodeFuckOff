@@ -1,5 +1,5 @@
-from xcodecleaner.core.runner import CmdResult
-from xcodecleaner.services.cleanup import StepResult
+from xcodefuckoff.core.runner import CmdResult
+from xcodefuckoff.services.cleanup import StepResult
 
 
 def test_denied_marker_forces_failure():

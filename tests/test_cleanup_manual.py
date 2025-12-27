@@ -1,6 +1,6 @@
 import os
 
-from xcodecleaner.services import cleanup
+from xcodefuckoff.services import cleanup
 
 
 def test_manual_cleanup_removes_selected_paths(make_runner, monkeypatch):

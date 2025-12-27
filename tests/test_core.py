@@ -1,5 +1,5 @@
-from xcodecleaner.services import cleanup, disks, processes
-from xcodecleaner.system import sip
+from xcodefuckoff.services import cleanup, disks, processes
+from xcodefuckoff.system import sip
 
 
 def test_is_sip_enabled_enabled(make_runner):

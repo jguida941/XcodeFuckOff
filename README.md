@@ -5,7 +5,7 @@ Because uninstalling Xcode apparently isn’t enough.
 A PyQt6 macOS utility to manage Xcode Simulator mounts and reclaim disk space.
 - Native macOS chrome
 - Clean, themeable UI.  
-Built out of pure hatred for Xcode.  
+- Built out of pure hatred for Xcode.  
 
 ## Table of Contents
 

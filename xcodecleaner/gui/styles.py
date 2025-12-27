@@ -49,7 +49,7 @@ THEMES: Dict[str, Dict[str, str]] = {
 		"warning": "#FFCC00",
 	},
 	"Purple Haze": {
-		# Dark with purple/magenta accent
+		# Dark purple with gold/yellow buttons
 		"bg": "#0D0A12",
 		"bg_secondary": "#16121F",
 		"bg_button": "#1E1A2A",
@@ -58,10 +58,10 @@ THEMES: Dict[str, Dict[str, str]] = {
 		"text_muted": "#9988AA",
 		"accent": "#AA66FF",
 		"accent_dim": "#8844DD",
-		"destructive": "#FF4488",
-		"destructive_end": "#FF88AA",
+		"destructive": "#FFB800",
+		"destructive_end": "#FFD54F",
 		"success": "#66FFAA",
-		"warning": "#FFAA44",
+		"warning": "#FFB800",
 	},
 	"Matrix": {
 		# Classic terminal style - orange/amber text for readability

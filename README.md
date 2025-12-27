@@ -106,26 +106,14 @@ Switch themes from the **Menu** button in the app:
 - **Neon** - Dark with cyan accent
 - **Cyber Red** - Dark with red/orange gradient
 - **Electric Blue** - Dark with electric blue accent
-- **Purple Haze** - Dark with purple/magenta accent
+- **Purple Haze** - Dark purple with gold buttons
 - **Matrix** - Terminal style with green/amber
 
 ## Xcode Requirement
 
 The app uses `xcrun simctl` commands which require **Xcode** or **Xcode Command Line Tools** to be installed.
 
-**Don't have Xcode installed?** You can still free up space manually:
-
-```bash
-# Delete user simulator devices
-rm -rf ~/Library/Developer/CoreSimulator/Devices/*
-
-# Delete DerivedData
-rm -rf ~/Library/Developer/Xcode/DerivedData/*
-
-# Delete system runtimes (requires sudo)
-sudo rm -rf /Library/Developer/CoreSimulator/Volumes/iOS_*
-sudo rm -rf /Library/Developer/CoreSimulator/Cryptex/*
-```
+**Don't have Xcode installed?** No problem - the app will detect this and offer a **Manual Cleanup** option that directly removes simulator files without needing Xcode commands.
 
 ## Known Limitations
 

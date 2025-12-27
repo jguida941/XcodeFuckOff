@@ -84,6 +84,9 @@ def test_list_simulator_disks_uses_runner_and_progress(make_runner, fixture_text
 	result = disks.list_simulator_disks(progress_callback=callback, runner=runner)
 	assert [disk["device"] for disk in result] == ["/dev/disk7s1", "/dev/disk11s1"]
 	assert progress == [0, 50]
+	commands = [call[2] for call in runner.calls]
+	assert ("diskutil", "info", "/dev/disk7s1") in commands
+	assert ("diskutil", "info", "/dev/disk11s1") in commands
 
 
 def test_force_unmount_disk_not_mounted(make_runner):

@@ -31,26 +31,21 @@ class AnimatedButton(QPushButton):
 
 
 def create_stat_widget(title: str, value: str) -> QFrame:
+	"""Create a stat card widget. Styling is handled by the theme stylesheet."""
 	widget = QFrame()
-	widget.setStyleSheet("""
-		QFrame {
-			background: rgba(72, 72, 74, 150);
-			border-radius: 8px;
-			padding: 15px;
-		}
-	""")
+	widget.setObjectName("StatCard")
 
 	layout = QVBoxLayout(widget)
+	layout.setContentsMargins(12, 10, 12, 10)
+	layout.setSpacing(4)
 
 	title_label = QLabel(title)
-	title_label.setStyleSheet("color: rgba(255, 255, 255, 0.6); font-size: 12px;")
+	title_label.setObjectName("StatCardTitle")
 	layout.addWidget(title_label)
 
 	value_label = QLabel(value)
-	value_label.setObjectName(f"{title}Value")
-	value_label.setStyleSheet("color: white; font-size: 24px; font-weight: bold;")
+	value_label.setObjectName(f"{title.replace(' ', '')}Value")
+	value_label.setProperty("class", "stat-value")
 	layout.addWidget(value_label)
 
 	return widget
-
-

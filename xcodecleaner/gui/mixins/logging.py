@@ -4,6 +4,8 @@ from PyQt6.QtCore import Qt, QTimer, QPropertyAnimation, QPoint
 from PyQt6.QtGui import QGuiApplication
 from PyQt6.QtWidgets import QLabel, QMenu, QMessageBox, QScrollBar, QGraphicsOpacityEffect
 
+from xcodecleaner.gui import styles
+
 
 class LoggingMixin:
 	def show_notification(self, message, level="info"):
@@ -113,34 +115,31 @@ class LoggingMixin:
 		except Exception:
 			pass
 
+	def apply_theme(self, theme_name: str):
+		"""Apply a new theme to the application."""
+		styles.set_current_theme(theme_name)
+		new_stylesheet = styles.get_stylesheet(theme_name)
+		self.setStyleSheet(new_stylesheet)
+		self.show_notification(f"Theme changed to {theme_name}", "success")
+
 	def show_menu(self, anchor_widget=None):
 		menu = QMenu(self)
-		menu.setStyleSheet(
-			"""
-			QMenu {
-				background: rgba(44, 44, 46, 240);
-				border: 1px solid rgba(255, 255, 255, 0.1);
-				border-radius: 8px;
-				padding: 5px;
-			}
-			QMenu::item {
-				color: white;
-				padding: 8px 20px;
-				border-radius: 4px;
-			}
-			QMenu::item:selected {
-				background: rgba(10, 132, 255, 200);
-			}
-		"""
-		)
+		menu.setStyleSheet(styles.get_menu_stylesheet())
 
 		about_action = menu.addAction("About")
 		about_action.triggered.connect(self.show_about)
 
 		menu.addSeparator()
 
-		prefs_action = menu.addAction("Preferences")
-		prefs_action.triggered.connect(self.open_preferences)
+		# Themes submenu
+		themes_menu = menu.addMenu("Themes")
+		themes_menu.setStyleSheet(styles.get_menu_stylesheet())
+		current_theme = styles.get_current_theme()
+		for theme_name in styles.get_theme_names():
+			action = themes_menu.addAction(theme_name)
+			action.setCheckable(True)
+			action.setChecked(theme_name == current_theme)
+			action.triggered.connect(lambda checked, t=theme_name: self.apply_theme(t))
 
 		menu.addSeparator()
 

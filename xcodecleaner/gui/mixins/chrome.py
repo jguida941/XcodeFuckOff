@@ -38,6 +38,7 @@ class ChromeMixin:
 	def create_title_bar(self, layout):
 		title_bar = QFrame()
 		title_bar.setFixedHeight(50)
+		title_bar.setStyleSheet("QFrame { background: transparent; border: none; }")
 		title_bar_layout = QHBoxLayout(title_bar)
 		title_bar_layout.setContentsMargins(15, 0, 15, 0)
 
@@ -47,13 +48,17 @@ class ChromeMixin:
 
 		# Red (close)
 		close_btn = QPushButton()
-		close_btn.setFixedSize(12, 12)
+		close_btn.setFixedSize(14, 14)
 		close_btn.setStyleSheet(
 			"""
 			QPushButton {
 				background: #FF5F56;
-				border-radius: 6px;
+				border-radius: 7px;
 				border: none;
+				padding: 0;
+				min-width: 0;
+				max-width: 14px;
+				max-height: 14px;
 			}
 			QPushButton:hover {
 				background: #FF8980;
@@ -64,13 +69,17 @@ class ChromeMixin:
 
 		# Yellow (minimize)
 		min_btn = QPushButton()
-		min_btn.setFixedSize(12, 12)
+		min_btn.setFixedSize(14, 14)
 		min_btn.setStyleSheet(
 			"""
 			QPushButton {
 				background: #FFBD2E;
-				border-radius: 6px;
+				border-radius: 7px;
 				border: none;
+				padding: 0;
+				min-width: 0;
+				max-width: 14px;
+				max-height: 14px;
 			}
 			QPushButton:hover {
 				background: #FDD663;
@@ -81,13 +90,17 @@ class ChromeMixin:
 
 		# Green (tile/maximize/zoom)
 		green_btn = QPushButton()
-		green_btn.setFixedSize(12, 12)
+		green_btn.setFixedSize(14, 14)
 		green_btn.setStyleSheet(
 			"""
 			QPushButton {
 				background: #28C840;
-				border-radius: 6px;
+				border-radius: 7px;
 				border: none;
+				padding: 0;
+				min-width: 0;
+				max-width: 14px;
+				max-height: 14px;
 			}
 			QPushButton:hover {
 				background: #42D85C;

@@ -29,14 +29,8 @@ from xcodecleaner.system import sip as sys_sip
 
 class TabsMixin:
 	def add_sip_status_banner(self):
-		sip = sys_sip.is_sip_enabled()
-		sip_enabled = bool(sip) if sip is not None else False
-
-		if sip_enabled:
-			banner = QLabel("System Integrity Protection (SIP) is ENABLED. Some functions may not work.")
-			banner.setStyleSheet("background-color: #aa0000; color: white; padding: 10px; border-radius: 8px;")
-			banner.setAlignment(Qt.AlignmentFlag.AlignCenter)
-			self.layout().addWidget(banner)
+		# SIP banner removed - it's not useful and takes up space
+		pass
 
 	def init_ui(self):
 		self.setWindowTitle("Xcode Simulator Disk Ejector Utility")

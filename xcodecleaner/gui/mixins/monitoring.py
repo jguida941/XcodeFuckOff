@@ -61,8 +61,8 @@ class MonitoringMixin:
 			except Exception:
 				pass
 
-		self.mounted_stat.findChild(QLabel, "Mounted DisksValue").setText(str(len(disks)))
-		self.space_stat.findChild(QLabel, "Space UsedValue").setText(f"{total_size:.1f} GB")
+		self.mounted_stat.findChild(QLabel, "MountedDisksValue").setText(str(len(disks)))
+		self.space_stat.findChild(QLabel, "SpaceUsedValue").setText(f"{total_size:.1f} GB")
 
 		self.progress_bar.setVisible(False)
 		self.status_label.setText(f"Found {len(disks)} simulator disk(s)")
@@ -90,7 +90,7 @@ class MonitoringMixin:
 			self.process_table.setItem(i, 3, QTableWidgetItem(f"{proc['mem']}%"))
 			self.process_table.setItem(i, 4, QTableWidgetItem(proc["name"]))
 
-		self.process_stat.findChild(QLabel, "Simulator ProcessesValue").setText(str(len(processes)))
+		self.process_stat.findChild(QLabel, "SimulatorProcessesValue").setText(str(len(processes)))
 		self.status_label.setText(f"Found {len(processes)} simulator process(es)")
 
 

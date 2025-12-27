@@ -15,7 +15,8 @@ class AnimatedButton(QPushButton):
 	def __init__(self, text: str, parent=None):
 		super().__init__(text, parent)
 		self.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-		self.setMinimumHeight(36)
+		self.setMinimumHeight(32)
+		self.setMaximumWidth(120)
 
 		# Create shadow effect for hover glow
 		self._shadow = QGraphicsDropShadowEffect(self)

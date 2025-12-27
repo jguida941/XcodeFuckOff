@@ -50,6 +50,22 @@ def test_manual_cleanup_no_paths_does_not_rm(make_runner, monkeypatch):
 	assert runner.calls == []
 
 
+def test_manual_cleanup_measure_space_false_skips_diskutil(make_runner, monkeypatch):
+	runner = make_runner({}, default=(0, "", ""))
+	monkeypatch.setattr(cleanup.glob, "glob", lambda pattern: [])
+	service = cleanup.CleanupService(runner=runner)
+	service.manual_cleanup(
+		delete_core_simulator=False,
+		delete_derived_data=False,
+		delete_archives=False,
+		delete_caches=False,
+		delete_device_support=False,
+		stop_processes=False,
+		measure_space=False,
+	)
+	assert not any(call[2][:3] == ("diskutil", "apfs", "list") for call in runner.calls)
+
+
 def test_manual_cleanup_space_delta_positive(make_runner, fixture_bytes, monkeypatch):
 	before = fixture_bytes("diskutil_apfs_list_before.txt")
 	after = fixture_bytes("diskutil_apfs_list_after.txt")

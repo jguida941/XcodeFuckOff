@@ -1,6 +1,14 @@
-# XcodeCleaner
+# Xcode Disk Ejector
 
-PyQt6 macOS utility to manage Xcode Simulator mounts and reclaim disk space.
+A modern PyQt6 macOS utility to manage Xcode Simulator mounts and reclaim disk space. Features native macOS window chrome, multiple color themes, and a clean futuristic UI.
+
+## Features
+
+- Native macOS traffic light buttons with full window management
+- 5 color themes: Neon, Cyber Red, Electric Blue, Purple Haze, Matrix
+- Real-time process monitoring for simulator processes
+- Disk space tracking and cleanup utilities
+- Activity logging
 
 ## Requirements
 
@@ -10,7 +18,7 @@ PyQt6 macOS utility to manage Xcode Simulator mounts and reclaim disk space.
 
 ## Screenshot
 
-![Xcode Simulator Disk Ejector Utility UI](assets/app.png)
+![Xcode Disk Ejector Utility](assets/app.py.png)
 
 ## Why this exists
 
@@ -18,14 +26,14 @@ Xcode/iOS Simulator can mount disk images (runtimes / Cryptex) that:
 - Show up in Finder and Disk Utility
 - Reappear after manual eject
 - Consume significant disk space (often tens of GB)
-- And its annoying as F***
+- And it's annoying as F***
 
-## Important mental model: eject ≠ free space
+## Important: Eject ≠ Free Space
 
-**Ejecting a simulator disk only unmounts it.**  
+**Ejecting a simulator disk only unmounts it.**
 The disk space is still consumed by the backing files until you delete them.
 
-### Where the “real” space lives
+### Where the space lives
 
 - **System runtime backing files (largest)**
   - `/Library/Developer/CoreSimulator/Volumes/`
@@ -36,39 +44,34 @@ The disk space is still consumed by the backing files until you delete them.
 
 ## What the app does
 
-- **Scan Disks**: find simulator-related mounted slices and display them
-- **Eject Selected**: unmount selected simulator volumes (does *not* free disk space by itself)
-- **Free Runtime Space**: performs a safe cleanup that actually reclaims space:
-  - `xcrun simctl shutdown all`
-  - `xcrun simctl delete unavailable`
-  - deletes user-space simulator devices + DerivedData
-  - optionally deletes `/Library/Developer/CoreSimulator/Volumes/iOS_*` and `/Library/Developer/CoreSimulator/Cryptex` (**requires admin**)
-- **Nuclear Option**: aggressive cleanup (kills processes, deletes sim devices, clears caches)
+| Button | Action |
+|--------|--------|
+| **Scan Disks** | Find simulator-related mounted volumes |
+| **Eject Selected** | Unmount selected simulator volumes (does *not* free space) |
+| **Free Runtime Space** | Safe cleanup that actually reclaims space |
+| **Nuclear Option** | Aggressive cleanup (kills processes, deletes devices, clears caches) |
 
-## Verify reclaimed space
+### Free Runtime Space performs:
+- `xcrun simctl shutdown all`
+- `xcrun simctl delete unavailable`
+- Deletes user-space simulator devices + DerivedData
+- Optionally deletes system runtime files (**requires admin**)
 
-Run (before and after cleanup):
-
-```bash
-df -h /System/Volumes/Data
-```
-
-## Run it
+## Installation
 
 ### Option A: Launcher (recommended)
-
-Creates a local venv, installs dependencies, installs the package editable, then launches the GUI:
 
 ```bash
 python scripts/launch_xcodecleaner.py
 ```
+
+Creates a local venv, installs dependencies, and launches the GUI.
 
 ### Option B: Manual
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
 pip install -e .
 python -m xcodecleaner
 ```
@@ -83,37 +86,44 @@ python -m xcodecleaner
 python -m xcodecleaner --nuclear
 ```
 
+## Verify reclaimed space
+
+```bash
+df -h /System/Volumes/Data
+```
+
 ## Development
 
 ```bash
-pip install -r requirements-dev.txt
+pip install -e ".[dev]"
 pytest -v
 ```
 
-### Running Tests
+## Themes
 
-```bash
-# Run all tests
-pytest tests/ -v
+Switch themes from the **Menu** button in the app:
 
-# Run only CLI tests
-pytest tests/test_cli.py -v
-
-# Run only core service tests
-pytest tests/test_core.py -v
-```
+- **Neon** - Dark with cyan accent
+- **Cyber Red** - Dark with red/orange gradient
+- **Electric Blue** - Dark with electric blue accent
+- **Purple Haze** - Dark with purple/magenta accent
+- **Matrix** - Terminal style with green/amber
 
 ## Known Limitations
 
-- **SIP (System Integrity Protection)**: Some runtime files may require SIP modifications to fully delete. The app uses `xcrun simctl runtime delete` which works with SIP enabled.
+- **SIP (System Integrity Protection)**: Some runtime files may require SIP modifications. The app uses `xcrun simctl runtime delete` which works with SIP enabled.
 - Requires Xcode Command Line Tools for `simctl` commands.
 - Simulators will be re-created if you open Xcode or run iOS builds.
 
-## Safety notes
+## Safety Notes
 
-- Deleting `/Library/Developer/CoreSimulator/...` requires admin and can remove installed simulator runtimes.
-- If you're not sure, run **Free Runtime Space** and answer **No** to the system-runtime prompt to keep cleanup user-space only.
+- Deleting `/Library/Developer/CoreSimulator/...` requires admin and removes installed simulator runtimes.
+- If unsure, run **Free Runtime Space** and answer **No** to the system-runtime prompt for user-space only cleanup.
 
 ## License
 
 MIT
+
+## Author
+
+[@jguida941](https://github.com/jguida941)

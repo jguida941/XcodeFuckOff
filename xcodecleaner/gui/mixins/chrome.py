@@ -38,38 +38,37 @@ class ChromeMixin:
 			# best-effort fallback; never crash the app on event propagation
 			return
 	def create_title_bar(self, layout):
-		"""Create a minimal title bar that integrates with native traffic lights."""
+		"""Create a title bar that sits below the native Apple title bar."""
 		title_bar = QFrame()
-		title_bar.setFixedHeight(32)
+		title_bar.setFixedHeight(36)
 		title_bar.setStyleSheet("QFrame { background: transparent; border: none; }")
 		title_bar_layout = QHBoxLayout(title_bar)
-		title_bar_layout.setContentsMargins(80, 0, 15, 0)  # Left margin for native traffic lights
+		title_bar_layout.setContentsMargins(15, 4, 15, 0)
 
 		# Title (centered) - styled by theme stylesheet
 		title = QLabel("Xcode Disk Ejector Utility")
 		title.setObjectName("TitleLabel")
 		title.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-		# Menu button - larger and more visible
+		# Menu button
 		menu_btn = QPushButton("Menu")
 		menu_btn.setObjectName("MenuButton")
-		menu_btn.setFixedSize(80, 28)
+		menu_btn.setFixedSize(70, 26)
 		menu_btn.setStyleSheet(
 			"""
 			QPushButton#MenuButton {
-				background: rgba(255, 255, 255, 0.1);
-				color: #EEE;
-				font-size: 13px;
+				background: transparent;
+				color: white;
+				font-size: 14px;
 				font-weight: 500;
-				border: 1px solid rgba(255, 255, 255, 0.2);
-				border-radius: 6px;
+				border: none;
 				min-height: 0;
 				padding: 4px 12px;
 			}
 			QPushButton#MenuButton:hover {
-				background: rgba(255, 255, 255, 0.2);
 				color: white;
-				border-color: rgba(255, 255, 255, 0.35);
+				background: rgba(255, 255, 255, 0.15);
+				border-radius: 4px;
 			}
 		"""
 		)
@@ -88,7 +87,7 @@ class ChromeMixin:
 		QTimer.singleShot(50, self._setup_native_window_style)
 
 	def _setup_native_window_style(self):
-		"""Configure native macOS window with transparent title bar."""
+		"""Configure native macOS window - keep standard Apple title bar."""
 		if not HAS_PYOBJC:
 			return
 
@@ -101,23 +100,8 @@ class ChromeMixin:
 			if ns_window is None:
 				return
 
-			# Make title bar transparent so our dark theme shows through
-			ns_window.setTitlebarAppearsTransparent_(True)
-
-			# Hide the window title text (we have our own)
+			# Hide the window title text (we have our own centered title)
 			ns_window.setTitleVisibility_(1)  # NSWindowTitleHidden
-
-			# Make content extend into title bar area
-			ns_window.setStyleMask_(ns_window.styleMask() | (1 << 15))  # NSWindowStyleMaskFullSizeContentView
-
-			# Set window background to match our theme
-			try:
-				from AppKit import NSColor
-				ns_window.setBackgroundColor_(NSColor.colorWithRed_green_blue_alpha_(
-					0x12/255, 0x12/255, 0x12/255, 1.0
-				))
-			except Exception:
-				pass
 
 		except Exception as e:
 			print(f"[WARNING] Failed to setup native window style: {e}")

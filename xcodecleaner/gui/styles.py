@@ -111,8 +111,7 @@ def get_stylesheet(theme_name: str = None) -> str:
 
 	QFrame#MainContainer {{
 		background: {t['bg']};
-		border-radius: 10px;
-		border: 1px solid {t['border']};
+		border: none;
 	}}
 
 	QLabel {{
@@ -124,7 +123,7 @@ def get_stylesheet(theme_name: str = None) -> str:
 		color: {t['destructive']};
 		font-size: 18px;
 		font-weight: bold;
-		padding: 4px;
+		padding: 2px;
 		background: transparent;
 	}}
 
@@ -204,7 +203,7 @@ def get_stylesheet(theme_name: str = None) -> str:
 		border: 2px solid {t['accent']};
 	}}
 
-	/* Refresh/secondary buttons */
+	/* Refresh/secondary buttons - green with orange outline on hover */
 	QPushButton#RefreshButton,
 	QPushButton#RefreshDisksButton,
 	QPushButton#RefreshProcessesButton,
@@ -212,27 +211,27 @@ def get_stylesheet(theme_name: str = None) -> str:
 		background: {t['accent']};
 		color: #000;
 		font-weight: bold;
+		font-size: 13px;
 		border: 2px solid transparent;
-		padding: 10px 20px;
-		min-height: 20px;
+		border-radius: 8px;
+		padding: 6px 16px;
+		min-height: 16px;
 	}}
 
 	QPushButton#RefreshButton:hover,
 	QPushButton#RefreshDisksButton:hover,
 	QPushButton#RefreshProcessesButton:hover,
 	QPushButton#SaveButton:hover {{
-		background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-			stop:0 {t['destructive']}, stop:1 {t['destructive_end']});
-		border: 2px solid {t['accent']};
+		background: {t['accent']};
+		border: 2px solid {t['destructive']};
 	}}
 
 	QPushButton#RefreshButton:pressed,
 	QPushButton#RefreshDisksButton:pressed,
 	QPushButton#RefreshProcessesButton:pressed,
 	QPushButton#SaveButton:pressed {{
-		background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-			stop:0 {t['destructive_end']}, stop:1 {t['destructive']});
-		border: 2px solid #FFF;
+		background: {t['accent_dim']};
+		border: 2px solid {t['destructive_end']};
 	}}
 
 	/* Tab widget */
@@ -272,18 +271,19 @@ def get_stylesheet(theme_name: str = None) -> str:
 	QGroupBox {{
 		color: {t['accent']};
 		font-weight: bold;
-		font-size: 13px;
+		font-size: 14px;
 		border: 1px solid {t['border']};
 		border-radius: 6px;
-		margin-top: 12px;
-		padding-top: 8px;
+		margin-top: 14px;
+		padding-top: 10px;
 	}}
 
 	QGroupBox::title {{
 		subcontrol-origin: margin;
+		subcontrol-position: top left;
 		left: 10px;
-		padding: 0 6px;
-		background: {t['bg']};
+		padding: 0 4px;
+		background: transparent;
 		color: {t['accent']};
 	}}
 

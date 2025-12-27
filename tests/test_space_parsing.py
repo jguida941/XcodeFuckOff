@@ -1,3 +1,5 @@
+import plistlib
+
 from xcodecleaner.services import space
 
 
@@ -66,3 +68,52 @@ def test_parse_df_output_invalid_returns_none():
 	assert space.parse_df_output("Filesystem") is None
 	assert space.parse_df_output("Filesystem\\nnot numbers here") is None
 	assert space.parse_df_output("Filesystem 1 2 3 4\\n/dev/disk1 a b c d") is None
+
+
+def test_parse_df_output_uses_last_line():
+	text = (
+		"Filesystem 1K-blocks Used Available\n"
+		"/dev/disk1 10 2 8\n"
+		"/dev/disk2 20 5 15\n"
+	)
+	result = space.parse_df_output(text)
+	assert result is not None
+	assert result["blocks_bytes"] == 20 * 1024
+	assert result["used_bytes"] == 5 * 1024
+	assert result["available_bytes"] == 15 * 1024
+
+
+def test_parse_df_output_accepts_four_columns():
+	text = "Filesystem 1K-blocks Used Available\n/dev/disk1 7 3 4\n"
+	result = space.parse_df_output(text)
+	assert result is not None
+	assert result["blocks_bytes"] == 7 * 1024
+	assert result["used_bytes"] == 3 * 1024
+	assert result["available_bytes"] == 4 * 1024
+
+
+def test_parse_apfs_not_allocated_falls_back_to_capacity_free():
+	container = {"Volumes": [{"MountPoint": "/System/Volumes/Data"}], "CapacityFree": 123}
+	payload = plistlib.dumps({"Containers": [container]})
+	assert space.parse_apfs_not_allocated(payload) == 123
+
+
+def test_parse_apfs_not_allocated_falls_back_to_capacity_available():
+	container = {"Volumes": [{"MountPoint": "/System/Volumes/Data"}], "CapacityAvailable": 456}
+	payload = plistlib.dumps({"Containers": [container]})
+	assert space.parse_apfs_not_allocated(payload) == 456
+
+
+def test_parse_apfs_not_allocated_returns_none_without_container():
+	payload = plistlib.dumps({})
+	assert space.parse_apfs_not_allocated(payload) is None
+
+
+def test_find_container_for_mount_handles_missing_containers():
+	assert space._find_container_for_mount({}, "/System/Volumes/Data") is None
+
+
+def test_find_container_for_mount_ignores_roles_for_other_mounts():
+	container = {"Volumes": [{"Roles": ["Data"], "MountPoint": "/System/Volumes/VM"}]}
+	apfs = {"Containers": [container]}
+	assert space._find_container_for_mount(apfs, "/System/Volumes/VM") is None

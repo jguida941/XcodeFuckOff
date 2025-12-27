@@ -36,10 +36,7 @@ class TabsMixin:
 		self.setWindowTitle("Xcode Disk Ejector Utility")
 		self.resize(900, 700)
 		self.setMinimumSize(700, 550)
-		# Use native window decorations on macOS for proper traffic lights
-		# WindowStaysOnTopHint keeps the window on top
-		self.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
-		self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+		# Use default window flags for proper native macOS chrome
 
 		# Main container with gradient background
 		self.container.setObjectName("MainContainer")
@@ -51,7 +48,7 @@ class TabsMixin:
 		# Main layout
 		main_layout = QVBoxLayout()
 		self.setLayout(main_layout)
-		main_layout.setContentsMargins(0, 0, 0, 20)
+		main_layout.setContentsMargins(0, 0, 0, 0)
 		main_layout.setSpacing(0)
 		self.main_layout = main_layout
 
@@ -291,6 +288,8 @@ class TabsMixin:
 		github_link.setTextFormat(Qt.TextFormat.RichText)
 		github_link.setTextInteractionFlags(Qt.TextInteractionFlag.TextBrowserInteraction)
 		github_link.setOpenExternalLinks(True)
+		github_link.setToolTip("Check out my GitHub!")
+		github_link.setStyleSheet("QLabel { border: none; outline: none; background: transparent; } QLabel:focus { border: none; outline: none; }")
 		status_layout.addWidget(github_link)
 
 		self.connection_indicator.setStyleSheet("color: #27C93F;")

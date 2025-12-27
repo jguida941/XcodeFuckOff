@@ -73,3 +73,24 @@ def test_check_devtools_happy_path(make_runner):
 	ok, message = devtools.check_devtools(runner=runner)
 	assert ok is True
 	assert "Developer tools configured correctly" in message
+
+
+def test_get_xcode_select_path_returns_none_on_error(make_runner):
+	runner = make_runner({
+		(False, True, ("xcode-select", "-p")): (1, "", "error"),
+	})
+	assert devtools.get_xcode_select_path(runner=runner) is None
+
+
+def test_is_simctl_available_false_on_error(make_runner):
+	runner = make_runner({
+		(False, True, ("xcrun", "simctl", "list")): (1, "", "error"),
+	})
+	assert devtools.is_simctl_available(runner=runner) is False
+
+
+def test_is_simctl_available_true(make_runner):
+	runner = make_runner({
+		(False, True, ("xcrun", "simctl", "list")): (0, "", ""),
+	})
+	assert devtools.is_simctl_available(runner=runner) is True

@@ -1,16 +1,16 @@
 import argparse
-from .services import cleanup, processes
-from .gui.app import main as gui_main
+
+from .services import cleanup
 
 
 def cmd_nuclear(password: str | None) -> int:
-	# Order mirrors GUI nuclear flow
-	processes.kill_all_simulators_and_xcode(password)
-	cleanup.delete_all_sim_devices()
-	cleanup.remove_device_directories_and_profiles()
-	cleanup.disable_core_simulator_service()
-	cleanup.clear_all_simulator_caches()
-	return 0
+	result = cleanup.nuclear_cleanup()
+	return 0 if result.commands_ok else 1
+
+
+def gui_main() -> int:
+	from .gui.app import main as app_main
+	return app_main()
 
 
 def main() -> int:
@@ -32,5 +32,3 @@ def main() -> int:
 
 if __name__ == "__main__":
 	raise SystemExit(main())
-
-

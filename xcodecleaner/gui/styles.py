@@ -121,10 +121,10 @@ def get_stylesheet(theme_name: str = None) -> str:
 	}}
 
 	QLabel#TitleLabel {{
-		color: {t['text']};
-		font-size: 16px;
+		color: {t['destructive']};
+		font-size: 18px;
 		font-weight: bold;
-		padding: 8px;
+		padding: 4px;
 		background: transparent;
 	}}
 
@@ -155,7 +155,8 @@ def get_stylesheet(theme_name: str = None) -> str:
 		background: {t['bg_button']};
 		border: 2px solid {t['border']};
 		border-radius: 8px;
-		padding: 8px 16px;
+		padding: 10px 20px;
+		min-height: 20px;
 		color: {t['text']};
 		font-weight: 500;
 		font-size: 13px;
@@ -189,7 +190,8 @@ def get_stylesheet(theme_name: str = None) -> str:
 		color: #000;
 		font-weight: bold;
 		border: none;
-		padding: 10px 20px;
+		padding: 12px 24px;
+		min-height: 20px;
 	}}
 
 	QPushButton#AccentButton:hover,
@@ -210,15 +212,27 @@ def get_stylesheet(theme_name: str = None) -> str:
 		background: {t['accent']};
 		color: #000;
 		font-weight: bold;
-		border: none;
-		padding: 8px 16px;
+		border: 2px solid transparent;
+		padding: 10px 20px;
+		min-height: 20px;
 	}}
 
 	QPushButton#RefreshButton:hover,
 	QPushButton#RefreshDisksButton:hover,
 	QPushButton#RefreshProcessesButton:hover,
 	QPushButton#SaveButton:hover {{
-		background: {t['accent_dim']};
+		background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+			stop:0 {t['destructive']}, stop:1 {t['destructive_end']});
+		border: 2px solid {t['accent']};
+	}}
+
+	QPushButton#RefreshButton:pressed,
+	QPushButton#RefreshDisksButton:pressed,
+	QPushButton#RefreshProcessesButton:pressed,
+	QPushButton#SaveButton:pressed {{
+		background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+			stop:0 {t['destructive_end']}, stop:1 {t['destructive']});
+		border: 2px solid #FFF;
 	}}
 
 	/* Tab widget */
@@ -309,12 +323,14 @@ def get_stylesheet(theme_name: str = None) -> str:
 	}}
 
 	QTableWidget::item {{
-		padding: 4px 8px;
+		padding: 8px 12px;
+		min-height: 24px;
 	}}
 
 	QTableWidget::item:selected {{
 		background: {t['accent']};
 		color: #000;
+		font-weight: bold;
 	}}
 
 	QHeaderView::section {{
@@ -355,6 +371,7 @@ def get_stylesheet(theme_name: str = None) -> str:
 	QCheckBox {{
 		color: {t['text']};
 		spacing: 6px;
+		background: transparent;
 	}}
 
 	QCheckBox::indicator {{

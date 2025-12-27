@@ -33,10 +33,12 @@ class TabsMixin:
 		pass
 
 	def init_ui(self):
-		self.setWindowTitle("Xcode Simulator Disk Ejector Utility")
+		self.setWindowTitle("Xcode Disk Ejector Utility")
 		self.resize(900, 700)
 		self.setMinimumSize(700, 550)
-		self.setWindowFlags(Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint)
+		# Use native window decorations on macOS for proper traffic lights
+		# WindowStaysOnTopHint keeps the window on top
+		self.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
 		self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
 
 		# Main container with gradient background
@@ -71,13 +73,6 @@ class TabsMixin:
 
 		# Start monitoring
 		self.start_monitoring()
-
-		# Resize grip (bottom-right) for frameless window resizing
-		from PyQt6.QtWidgets import QSizeGrip
-
-		self.size_grip = QSizeGrip(self)
-		self.size_grip.setFixedSize(16, 16)
-		self.size_grip.raise_()
 
 	def create_dashboard_tab(self):
 		dashboard = QWidget()

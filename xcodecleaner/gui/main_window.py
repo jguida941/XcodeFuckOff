@@ -14,6 +14,8 @@ from PyQt6.QtWidgets import (
 	QWidget,
 )
 
+from xcodecleaner.core.runner import get_default_runner
+from xcodecleaner.services import cleanup as svc_cleanup
 from xcodecleaner.gui.threads import DiskScanner, ProcessMonitor
 from xcodecleaner.gui.widgets import AccentButton, create_stat_widget
 from xcodecleaner.gui.mixins import ActionsMixin, ChromeMixin, LoggingMixin, MonitoringMixin, TabsMixin
@@ -22,6 +24,8 @@ from xcodecleaner.gui.mixins import ActionsMixin, ChromeMixin, LoggingMixin, Mon
 class EnhancedSimulatorKiller(QWidget, ChromeMixin, TabsMixin, MonitoringMixin, ActionsMixin, LoggingMixin):
     def __init__(self):
         super().__init__()
+        self.runner = get_default_runner()
+        self.cleanup_service = svc_cleanup.CleanupService(runner=self.runner)
         self.main_layout = None
         self.title_bar = None
         self.eject_selected_btn = AccentButton("Eject Selected")
@@ -69,8 +73,8 @@ class EnhancedSimulatorKiller(QWidget, ChromeMixin, TabsMixin, MonitoringMixin, 
         self.fade_out = None
         self.drag_position = None
         self.size_grip = None
-        self.disk_scanner = DiskScanner()
-        self.process_monitor = ProcessMonitor()
+        self.disk_scanner = DiskScanner(runner=self.runner)
+        self.process_monitor = ProcessMonitor(runner=self.runner)
         self.selected_disks = []
         self.init_ui()
         self.init_system_tray()
@@ -96,4 +100,3 @@ if __name__ == "__main__":
     window.show()
 
     sys.exit(app.exec())
-

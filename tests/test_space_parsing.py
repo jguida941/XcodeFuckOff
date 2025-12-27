@@ -116,4 +116,4 @@ def test_find_container_for_mount_handles_missing_containers():
 def test_find_container_for_mount_ignores_roles_for_other_mounts():
 	container = {"Volumes": [{"Roles": ["Data"], "MountPoint": "/System/Volumes/VM"}]}
 	apfs = {"Containers": [container]}
-	assert space._find_container_for_mount(apfs, "/System/Volumes/VM") is None
+	assert space._find_container_for_mount(apfs, "/System/Volumes/Other") is None

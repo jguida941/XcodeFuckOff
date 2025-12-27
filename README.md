@@ -14,7 +14,7 @@ A modern PyQt6 macOS utility to manage Xcode Simulator mounts and reclaim disk s
 
 - macOS 12+ (Monterey or later)
 - Python 3.10+
-- Xcode Command Line Tools (`xcode-select --install`)
+- Xcode or Xcode Command Line Tools (see [Xcode Requirement](#xcode-requirement) for alternatives)
 
 ## Screenshot
 
@@ -109,16 +109,35 @@ Switch themes from the **Menu** button in the app:
 - **Purple Haze** - Dark with purple/magenta accent
 - **Matrix** - Terminal style with green/amber
 
+## Xcode Requirement
+
+The app uses `xcrun simctl` commands which require **Xcode** or **Xcode Command Line Tools** to be installed.
+
+**Don't have Xcode installed?** You can still free up space manually:
+
+```bash
+# Delete user simulator devices
+rm -rf ~/Library/Developer/CoreSimulator/Devices/*
+
+# Delete DerivedData
+rm -rf ~/Library/Developer/Xcode/DerivedData/*
+
+# Delete system runtimes (requires sudo)
+sudo rm -rf /Library/Developer/CoreSimulator/Volumes/iOS_*
+sudo rm -rf /Library/Developer/CoreSimulator/Cryptex/*
+```
+
 ## Known Limitations
 
-- **SIP (System Integrity Protection)**: Some runtime files may require SIP modifications. The app uses `xcrun simctl runtime delete` which works with SIP enabled.
-- Requires Xcode Command Line Tools for `simctl` commands.
+- **SIP (System Integrity Protection)**: Some system runtime files are protected. The app uses `xcrun simctl runtime delete` which respects SIP.
 - Simulators will be re-created if you open Xcode or run iOS builds.
+- Some mounted disk images may reappear after reboot until backing files are deleted.
 
 ## Safety Notes
 
 - Deleting `/Library/Developer/CoreSimulator/...` requires admin and removes installed simulator runtimes.
 - If unsure, run **Free Runtime Space** and answer **No** to the system-runtime prompt for user-space only cleanup.
+- Always verify what you're deleting - the Nuclear Option is aggressive!
 
 ## License
 

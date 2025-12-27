@@ -42,6 +42,8 @@ def test_check_devtools_missing_xcode_select(make_runner):
 	ok, message = devtools.check_devtools(runner=runner)
 	assert ok is False
 	assert "Command Line Tools not found" in message
+	assert "Install Xcode" in message
+	assert "xcode-select --switch" in message
 
 
 def test_check_devtools_clt_without_xcode(make_runner, monkeypatch):
@@ -53,6 +55,7 @@ def test_check_devtools_clt_without_xcode(make_runner, monkeypatch):
 	ok, message = devtools.check_devtools(runner=runner)
 	assert ok is False
 	assert "CommandLineTools" in message
+	assert "full Xcode" in message
 
 
 def test_check_devtools_simctl_unavailable(make_runner):
@@ -63,6 +66,7 @@ def test_check_devtools_simctl_unavailable(make_runner):
 	ok, message = devtools.check_devtools(runner=runner)
 	assert ok is False
 	assert "simctl not working" in message
+	assert "xcode-select --switch" in message
 
 
 def test_check_devtools_happy_path(make_runner):
@@ -73,6 +77,25 @@ def test_check_devtools_happy_path(make_runner):
 	ok, message = devtools.check_devtools(runner=runner)
 	assert ok is True
 	assert "Developer tools configured correctly" in message
+
+
+def test_is_xcode_path_true(make_runner):
+	runner = make_runner({
+		(False, True, ("xcode-select", "-p")): (0, "/Applications/Xcode.app/Contents/Developer", ""),
+	})
+	assert devtools.is_xcode_path(runner=runner) is True
+
+
+def test_is_xcode_path_false_for_clt(make_runner):
+	runner = make_runner({
+		(False, True, ("xcode-select", "-p")): (0, "/Library/Developer/CommandLineTools", ""),
+	})
+	assert devtools.is_xcode_path(runner=runner) is False
+
+
+def test_get_fix_command_contains_switch():
+	command = devtools.get_fix_command()
+	assert "xcode-select --switch" in command
 
 
 def test_get_xcode_select_path_returns_none_on_error(make_runner):

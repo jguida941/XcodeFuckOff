@@ -68,6 +68,24 @@ def test_parse_diskutil_info_missing_name_defaults_unknown():
 	assert info["name"] == "Unknown"
 
 
+def test_list_simulator_disks_uses_runner_and_progress(make_runner, fixture_text):
+	list_output = fixture_text("diskutil_list_before.txt")
+	info_output = fixture_text("diskutil_info_disk7s1.txt")
+	runner = make_runner({
+		(False, True, ("diskutil", "list")): (0, list_output, ""),
+		(False, True, ("diskutil", "info", "/dev/disk7s1")): (0, info_output, ""),
+		(False, True, ("diskutil", "info", "/dev/disk11s1")): (0, info_output, ""),
+	})
+	progress = []
+
+	def callback(value):
+		progress.append(value)
+
+	result = disks.list_simulator_disks(progress_callback=callback, runner=runner)
+	assert [disk["device"] for disk in result] == ["/dev/disk7s1", "/dev/disk11s1"]
+	assert progress == [0, 50]
+
+
 def test_force_unmount_disk_not_mounted(make_runner):
 	runner = make_runner({
 		(False, True, ("diskutil", "unmountDisk", "force", "/dev/disk1")): (1, "", "not mounted"),

@@ -118,3 +118,17 @@ def test_kill_all_simulators_and_xcode_admin_combines_commands(make_runner):
 	assert f"launchctl bootout {user_scope}" in combined
 	assert "pkill -9 -x Xcode" in combined
 	assert any(call[0] is True and call[2][0] == "/bin/sh" for call in runner.calls)
+
+
+def test_kill_process_returns_true_on_success(make_runner):
+	runner = make_runner({
+		(False, True, ("kill", "-9", "123")): (0, "", ""),
+	})
+	assert processes.kill_process("123", runner=runner) is True
+
+
+def test_kill_process_returns_false_on_failure(make_runner):
+	runner = make_runner({
+		(False, True, ("kill", "-9", "123")): (1, "", "fail"),
+	})
+	assert processes.kill_process("123", runner=runner) is False

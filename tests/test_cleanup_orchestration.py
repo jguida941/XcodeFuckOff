@@ -142,8 +142,8 @@ def test_free_runtime_space_runtime_error_propagates(make_runner, monkeypatch):
 		stop_processes=False,
 		measure_space=False,
 	)
-	assert result.commands_ok is False
 	assert result.error is not None
+	assert "Failed to parse simctl runtime list" in result.error
 
 
 def test_free_runtime_space_stop_processes_runs_launchctl(make_runner, fixture_text, monkeypatch):

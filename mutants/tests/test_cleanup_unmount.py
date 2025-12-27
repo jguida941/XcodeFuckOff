@@ -72,3 +72,14 @@ def test_unmount_disk_success_skips_hdiutil(make_runner):
 	result = service.unmount_simulator_disk("/dev/disk7s1")
 	assert result.commands_ok is True
 	assert not any(call[2][0] == "hdiutil" for call in runner.calls)
+
+
+def test_unmount_disk_fallback_not_mounted_ok(make_runner):
+	runner = make_runner({
+		(False, True, ("diskutil", "unmountDisk", "force", "/dev/disk7")): (1, "", "busy"),
+		(False, True, ("hdiutil", "detach", "/dev/disk7", "-force")): (1, "", "not mounted"),
+	})
+	service = cleanup.CleanupService(runner=runner)
+	result = service.unmount_simulator_disk("/dev/disk7s1")
+	assert result.commands_ok is True
+	assert result.error is None

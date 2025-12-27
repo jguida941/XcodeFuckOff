@@ -30,7 +30,7 @@ def fixture_bytes():
 class FakeRunner:
 	def __init__(self, script: dict, default: Tuple[int, str | bytes, str | bytes] | None = None):
 		self.script = script
-		self.calls: list[Tuple[bool, bool, tuple[str, ...]]] = []
+		self.calls: list[tuple] = []
 		self.default = default or (127, "", "unexpected command")
 
 	def run(
@@ -43,8 +43,8 @@ class FakeRunner:
 		env: Mapping[str, str] | None = None,
 	) -> CmdResult:
 		env_key = tuple(sorted((str(key), str(value)) for key, value in (env or {}).items())) if env else None
-		key_with_env = (sudo, bool(text), tuple(cmd), env_key)
-		key = (sudo, bool(text), tuple(cmd))
+		key_with_env = (sudo, text, tuple(cmd), env_key)
+		key = (sudo, text, tuple(cmd))
 		self.calls.append(key_with_env if env_key is not None else key)
 
 		entry = self.script.get(key_with_env)

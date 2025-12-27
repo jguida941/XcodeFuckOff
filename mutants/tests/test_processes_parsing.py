@@ -69,3 +69,66 @@ def test_parse_ps_aux_skips_incomplete_lines():
 	ps_output = "USER PID %CPU %MEM VSZ RSS TT STAT STARTED TIME COMMAND\nbad line\n"
 	result = processes._parse_ps_aux(ps_output)
 	assert result == []
+
+
+def test_kill_all_simulators_and_xcode_launchctl_first(make_runner):
+	runner = make_runner({}, default=(0, "", ""))
+	processes.kill_all_simulators_and_xcode(runner=runner)
+	commands = [call[2] for call in runner.calls]
+	assert commands[0][0] == "launchctl"
+	assert commands[1][0] == "launchctl"
+
+
+def test_kill_all_simulators_and_xcode_command_list(make_runner):
+	runner = make_runner({}, default=(0, "", ""))
+	processes.kill_all_simulators_and_xcode(runner=runner)
+	user_scope = f"gui/{processes.os.getuid()}/com.apple.CoreSimulator.CoreSimulatorService"
+	expected = [
+		("launchctl", "bootout", user_scope),
+		("launchctl", "remove", "com.apple.CoreSimulator.CoreSimulatorService"),
+		("pkill", "-9", "-f", "Simulator"),
+		("pkill", "-9", "-f", "CoreSimulator"),
+		("pkill", "-9", "-f", "SimulatorTrampoline"),
+		("pkill", "-9", "-f", "launchd_sim"),
+		("killall", "-9", "com.apple.CoreSimulator.CoreSimulatorService"),
+		("pkill", "-9", "-x", "Xcode"),
+	]
+	assert [call[2] for call in runner.calls] == expected
+
+
+def test_parse_ps_aux_parses_fields():
+	ps_output = (
+		"USER PID %CPU %MEM VSZ RSS TT STAT STARTED TIME COMMAND\n"
+		"user 4321 12.3 4.5 1234 5678 ?? S 10:00AM 0:01.00 "
+		"/Applications/Simulator.app/Contents/MacOS/Simulator --foo bar\n"
+	)
+	result = processes._parse_ps_aux(ps_output)
+	assert len(result) == 1
+	assert result[0]["pid"] == "4321"
+	assert result[0]["cpu"] == "12.3"
+	assert result[0]["mem"] == "4.5"
+	assert result[0]["name"].endswith("Simulator --foo bar")
+
+
+def test_kill_all_simulators_and_xcode_admin_combines_commands(make_runner):
+	runner = make_runner({}, default=(0, "", ""))
+	combined, rc = processes.kill_all_simulators_and_xcode_admin(runner=runner)
+	user_scope = f"gui/{processes.os.getuid()}/com.apple.CoreSimulator.CoreSimulatorService"
+	assert rc == 0
+	assert f"launchctl bootout {user_scope}" in combined
+	assert "pkill -9 -x Xcode" in combined
+	assert any(call[0] is True and call[2][0] == "/bin/sh" for call in runner.calls)
+
+
+def test_kill_process_returns_true_on_success(make_runner):
+	runner = make_runner({
+		(False, True, ("kill", "-9", "123")): (0, "", ""),
+	})
+	assert processes.kill_process("123", runner=runner) is True
+
+
+def test_kill_process_returns_false_on_failure(make_runner):
+	runner = make_runner({
+		(False, True, ("kill", "-9", "123")): (1, "", "fail"),
+	})
+	assert processes.kill_process("123", runner=runner) is False

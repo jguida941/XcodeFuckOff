@@ -41,7 +41,9 @@ A PyQt6 macOS utility to manage Xcode Simulator mounts and reclaim disk space.
 
 ## Screenshot
 
-![Xcode Disk Ejector Utility](assets/app.py.png)
+<img width="897" height="729" alt="Screenshot 2025-12-27 at 8 45 00 AM" src="https://github.com/user-attachments/assets/28188823-74b2-4a55-8f73-5d960307cf10" />
+
+
 
 ## Why this exists
 
